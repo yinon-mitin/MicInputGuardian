@@ -43,10 +43,11 @@ Selecting a microphone directly from the menu switches to **Keep selected input*
 ## Build and run
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/yinon-mitin/MicInputGuardian.git
 cd MicInputGuardian
 ./script/build_and_run.sh
 ```
+
 
 The script builds the Swift package, stages a locally ad-hoc-signed app at `dist/MicInputGuardian.app`, and launches it.
 
