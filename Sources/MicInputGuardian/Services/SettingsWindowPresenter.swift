@@ -2,23 +2,26 @@ import AppKit
 
 @MainActor
 enum SettingsWindowPresenter {
-    static func open() {
+    static func openLegacySettings() {
         let application = NSApplication.shared
-        application.activate(ignoringOtherApps: true)
 
         if !application.sendAction(
-            Selector(("showSettingsWindow:")),
+            Selector(("showPreferencesWindow:")),
             to: nil,
             from: nil
         ) {
             application.sendAction(
-                Selector(("showPreferencesWindow:")),
+                Selector(("showSettingsWindow:")),
                 to: nil,
                 from: nil
             )
         }
 
-        bringToFront(attemptsRemaining: 6)
+        bringToFront()
+    }
+
+    static func bringToFront() {
+        bringToFront(attemptsRemaining: 10)
     }
 
     private static func bringToFront(attemptsRemaining: Int) {

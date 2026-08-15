@@ -53,10 +53,14 @@ struct MenuContentView: View {
 
         Divider()
 
-        Button("Settings…") {
-            SettingsWindowPresenter.open()
+        if #available(macOS 14.0, *) {
+            SettingsMenuButton()
+        } else {
+            Button("Settings…") {
+                SettingsWindowPresenter.openLegacySettings()
+            }
+            .keyboardShortcut(",")
         }
-        .keyboardShortcut(",")
 
         Button("Refresh") {
             controller.refreshNow()
@@ -73,4 +77,17 @@ struct MenuContentView: View {
         return String(value.prefix(27)) + "…"
     }
 
+}
+
+@available(macOS 14.0, *)
+private struct SettingsMenuButton: View {
+    @Environment(\.openSettings) private var openSettings
+
+    var body: some View {
+        Button("Settings…") {
+            openSettings()
+            SettingsWindowPresenter.bringToFront()
+        }
+        .keyboardShortcut(",")
+    }
 }
