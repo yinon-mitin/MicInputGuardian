@@ -11,6 +11,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 struct MicInputGuardianApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
     @StateObject private var controller = AudioController()
+    @StateObject private var launchAtLoginController = LaunchAtLoginController()
 
     var body: some Scene {
         MenuBarExtra {
@@ -26,7 +27,10 @@ struct MicInputGuardianApp: App {
         .menuBarExtraStyle(.menu)
 
         Settings {
-            SettingsView(controller: controller)
+            SettingsView(
+                controller: controller,
+                launchAtLoginController: launchAtLoginController
+            )
         }
     }
 }

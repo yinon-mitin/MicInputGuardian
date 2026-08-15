@@ -182,14 +182,14 @@ final class AudioController: ObservableObject {
             }
 
             guard currentInputUID != uid else {
-                statusMessage = "Locked to \(device.name)"
+                statusMessage = "Input locked"
                 return
             }
 
             do {
                 try audioService.setDefaultInputDevice(device.id)
                 currentInputUID = uid
-                statusMessage = "Switched to \(device.name)"
+                statusMessage = "Input switched"
             } catch {
                 statusMessage = error.localizedDescription
             }

@@ -1,7 +1,9 @@
+import AppKit
 import SwiftUI
 
 struct SettingsView: View {
     @ObservedObject var controller: AudioController
+    @ObservedObject var launchAtLoginController: LaunchAtLoginController
 
     var body: some View {
         Form {
@@ -24,6 +26,32 @@ struct SettingsView: View {
                     ForEach(InputPolicy.allCases) { policy in
                         Text(policy.title).tag(policy)
                     }
+                }
+            }
+
+            Section("Startup") {
+                Toggle(
+                    "Launch at login",
+                    isOn: Binding(
+                        get: { launchAtLoginController.isEnabled },
+                        set: launchAtLoginController.setEnabled
+                    )
+                )
+
+                if launchAtLoginController.requiresApproval {
+                    Text("Allow Mic Input Guardian in System Settings to finish enabling launch at login.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+
+                    Button("Open Login Items Settings") {
+                        launchAtLoginController.openSystemSettings()
+                    }
+                }
+
+                if let errorMessage = launchAtLoginController.errorMessage {
+                    Text(errorMessage)
+                        .font(.caption)
+                        .foregroundStyle(.red)
                 }
             }
 
@@ -88,7 +116,13 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 520, height: 430)
+        .frame(width: 540, height: 500)
+        .onAppear {
+            launchAtLoginController.refresh()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            launchAtLoginController.refresh()
+        }
     }
 
     private func selectFixedInput(_ uid: String?) {

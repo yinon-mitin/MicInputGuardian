@@ -20,6 +20,7 @@ Mic Input Guardian watches CoreAudio device changes and applies the policy you c
 - Can keep one microphone selected regardless of output changes.
 - Includes a **System managed** mode that observes without changing anything.
 - Lets you pause automatic fixing without losing your configuration.
+- Can launch automatically when you sign in using the native macOS login-item service.
 - Runs as a menu-bar-only accessory app with no Dock icon.
 - Does not capture or transmit audio.
 

@@ -53,17 +53,10 @@ struct MenuContentView: View {
 
         Divider()
 
-        if #available(macOS 14.0, *) {
-            SettingsLink {
-                Text("Settings…")
-            }
-            .keyboardShortcut(",")
-        } else {
-            Button("Settings…") {
-                openLegacySettings()
-            }
-            .keyboardShortcut(",")
+        Button("Settings…") {
+            SettingsWindowPresenter.open()
         }
+        .keyboardShortcut(",")
 
         Button("Refresh") {
             controller.refreshNow()
@@ -80,18 +73,4 @@ struct MenuContentView: View {
         return String(value.prefix(27)) + "…"
     }
 
-    private func openLegacySettings() {
-        NSApplication.shared.activate(ignoringOtherApps: true)
-        if !NSApplication.shared.sendAction(
-            Selector(("showSettingsWindow:")),
-            to: nil,
-            from: nil
-        ) {
-            NSApplication.shared.sendAction(
-                Selector(("showPreferencesWindow:")),
-                to: nil,
-                from: nil
-            )
-        }
-    }
 }
