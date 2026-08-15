@@ -3,6 +3,8 @@ import SwiftUI
 
 struct MenuContentView: View {
     @ObservedObject var controller: AudioController
+    @ObservedObject var launchAtLoginController: LaunchAtLoginController
+    @ObservedObject var settingsWindowPresenter: SettingsWindowPresenter
 
     var body: some View {
         Text("Input: \(shortTitle(controller.currentInputName))")
@@ -53,14 +55,13 @@ struct MenuContentView: View {
 
         Divider()
 
-        if #available(macOS 14.0, *) {
-            SettingsMenuButton()
-        } else {
-            Button("Settings…") {
-                SettingsWindowPresenter.openLegacySettings()
-            }
-            .keyboardShortcut(",")
+        Button("Settings…") {
+            settingsWindowPresenter.open(
+                controller: controller,
+                launchAtLoginController: launchAtLoginController
+            )
         }
+        .keyboardShortcut(",")
 
         Button("Refresh") {
             controller.refreshNow()
@@ -77,17 +78,4 @@ struct MenuContentView: View {
         return String(value.prefix(27)) + "…"
     }
 
-}
-
-@available(macOS 14.0, *)
-private struct SettingsMenuButton: View {
-    @Environment(\.openSettings) private var openSettings
-
-    var body: some View {
-        Button("Settings…") {
-            openSettings()
-            SettingsWindowPresenter.bringToFront()
-        }
-        .keyboardShortcut(",")
-    }
 }
