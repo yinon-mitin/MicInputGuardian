@@ -48,7 +48,6 @@ cd MicInputGuardian
 ./script/build_and_run.sh
 ```
 
-
 The script builds the Swift package, stages a locally ad-hoc-signed app at `dist/MicInputGuardian.app`, and launches it.
 
 Build a release bundle without launching it:
@@ -77,6 +76,17 @@ Regenerate `AppIcon.icns` from the checked-in 1024 px source icon:
 4. Optional: add it in **System Settings → General → Login Items**.
 
 Local builds are ad-hoc signed, not Developer ID signed or notarized. Public binary releases should be signed and notarized with an Apple Developer account.
+
+## Create a GitHub Release
+
+The included Release workflow builds separate Apple Silicon and Intel packages whenever a version tag is pushed:
+
+```bash
+git tag -a v1.0.0 -m "Mic Input Guardian 1.0.0"
+git push origin v1.0.0
+```
+
+GitHub Actions publishes both ZIP files and their SHA-256 checksums automatically. Developer ID signing and Apple notarization are supported when the optional repository secrets are configured. See [RELEASING.md](RELEASING.md) for setup and secret names.
 
 ## How it works
 

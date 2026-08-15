@@ -6,6 +6,8 @@ APP_NAME="MicInputGuardian"
 BUNDLE_ID="com.micinputguardian.app"
 MIN_SYSTEM_VERSION="13.0"
 CONFIGURATION="${CONFIGURATION:-debug}"
+APP_VERSION="${APP_VERSION:-1.0.0}"
+BUILD_NUMBER="${BUILD_NUMBER:-1}"
 
 if [[ "$MODE" == "--release" || "$MODE" == "release" ]]; then
   CONFIGURATION="release"
@@ -50,9 +52,9 @@ cat >"$INFO_PLIST" <<PLIST
   <key>CFBundlePackageType</key>
   <string>APPL</string>
   <key>CFBundleShortVersionString</key>
-  <string>1.0.0</string>
+  <string>$APP_VERSION</string>
   <key>CFBundleVersion</key>
-  <string>1</string>
+  <string>$BUILD_NUMBER</string>
   <key>LSMinimumSystemVersion</key>
   <string>$MIN_SYSTEM_VERSION</string>
   <key>LSUIElement</key>
