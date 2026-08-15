@@ -1,0 +1,97 @@
+import AppKit
+import SwiftUI
+
+struct MenuContentView: View {
+    @ObservedObject var controller: AudioController
+
+    var body: some View {
+        Text("Input: \(shortTitle(controller.currentInputName))")
+        Text(shortTitle(controller.statusMessage))
+
+        Divider()
+
+        Toggle(
+            "Automatic fixing",
+            isOn: Binding(
+                get: { controller.automationEnabled },
+                set: controller.setAutomationEnabled
+            )
+        )
+
+        Menu("Policy") {
+            ForEach(InputPolicy.allCases) { policy in
+                Button {
+                    controller.setPolicy(policy)
+                } label: {
+                    if controller.policy == policy {
+                        Label(policy.title, systemImage: "checkmark")
+                    } else {
+                        Text(policy.title)
+                    }
+                }
+            }
+        }
+
+        Divider()
+
+        Text("Input devices")
+        ForEach(controller.inputDevices) { device in
+            Button {
+                controller.selectInput(device)
+            } label: {
+                if controller.policy == .fixedDevice && controller.selectedDeviceUID == device.uid {
+                    Label(shortTitle(device.name), systemImage: "checkmark")
+                } else {
+                    Text(shortTitle(device.name))
+                }
+            }
+        }
+
+        if controller.inputDevices.isEmpty {
+            Text("No input devices found")
+        }
+
+        Divider()
+
+        if #available(macOS 14.0, *) {
+            SettingsLink {
+                Text("Settings…")
+            }
+            .keyboardShortcut(",")
+        } else {
+            Button("Settings…") {
+                openLegacySettings()
+            }
+            .keyboardShortcut(",")
+        }
+
+        Button("Refresh") {
+            controller.refreshNow()
+        }
+
+        Button("Quit") {
+            NSApplication.shared.terminate(nil)
+        }
+        .keyboardShortcut("q")
+    }
+
+    private func shortTitle(_ value: String) -> String {
+        guard value.count > 30 else { return value }
+        return String(value.prefix(27)) + "…"
+    }
+
+    private func openLegacySettings() {
+        NSApplication.shared.activate(ignoringOtherApps: true)
+        if !NSApplication.shared.sendAction(
+            Selector(("showSettingsWindow:")),
+            to: nil,
+            from: nil
+        ) {
+            NSApplication.shared.sendAction(
+                Selector(("showPreferencesWindow:")),
+                to: nil,
+                from: nil
+            )
+        }
+    }
+}
